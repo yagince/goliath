@@ -1,4 +1,4 @@
-package golidation
+package goliath
 
 import (
 	"fmt"

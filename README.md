@@ -1,11 +1,11 @@
-# Golidation
+# Goliath
 
 validation library for Golang
 
 ## Instalation
 
 ```
-go get github.com/yagince/golidation
+go get github.com/yagince/goliath
 ```
 
 ## Usage

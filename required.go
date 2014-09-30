@@ -1,4 +1,4 @@
-package golidation
+package goliath
 
 type Required struct{}
 
