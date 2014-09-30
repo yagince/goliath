@@ -96,3 +96,50 @@ func TestValidation_MaxLength(t *testing.T) {
 	}
 
 }
+
+func TestValidation_MultiValue(t *testing.T) {
+	validation := NewValidation()
+	validation.Field("name").Required().MinLength(2).MaxLength(3)
+	validation.Field("password").MinLength(6).MaxLength(10)
+
+	var (
+		result ValidationResult
+		errors Errors
+	)
+
+	result = validation.Validate(map[string]interface{}{"name": "1234", "password": "12345"})
+	if !result.HasError() {
+		t.Error("should has some errors")
+	}
+
+	errors = result.Errors()
+	t.Log(errors)
+	{
+		error, ok := errors["name"]
+		if !ok {
+			t.Error("should has error of `name`")
+			t.FailNow()
+		}
+
+		expect := (MaxLength{3}).Message()
+		if error.Message != expect {
+			t.Error("should be maxlength error")
+			t.Logf("expect %s", expect)
+			t.Logf("got    %s", error.Message)
+		}
+	}
+	{
+		error, ok := errors["password"]
+		if !ok {
+			t.Error("should has error of `password`")
+			t.FailNow()
+		}
+
+		expect := (MinLength{6}).Message()
+		if error.Message != expect {
+			t.Error("should be maxlength error")
+			t.Logf("expect %s", expect)
+			t.Logf("got    %s", error.Message)
+		}
+	}
+}
