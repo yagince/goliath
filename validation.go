@@ -20,12 +20,12 @@ func (validation *Validation) Field(name string) *FieldValidator {
 }
 
 func (validation *Validation) Validate(values map[string]interface{}) ValidationResult {
-	result := ValidationResult{make(Errors)}
+	result := ValidationResult{make(ValidationErrors)}
 
 	for name, validators := range validation.validators {
 		message, ok := validators.IsSatisfied(values[name])
 		if !ok {
-			result.AddError(Error{Key: name, Message: message})
+			result.AddError(ValidationError{Key: name, Message: message})
 		}
 	}
 	return result
@@ -67,10 +67,10 @@ func (field *FieldValidator) MaxLength(length int) *FieldValidator {
 }
 
 type ValidationResult struct {
-	errors Errors
+	errors ValidationErrors
 }
 
-func (result ValidationResult) AddError(error Error) {
+func (result ValidationResult) AddError(error ValidationError) {
 	result.errors[error.Key] = error
 }
 
@@ -78,13 +78,13 @@ func (result ValidationResult) HasError() bool {
 	return len(result.errors) > 0
 }
 
-func (result ValidationResult) Errors() Errors {
+func (result ValidationResult) Errors() ValidationErrors {
 	return result.errors
 }
 
-type Error struct {
+type ValidationError struct {
 	Key     string
 	Message string
 }
 
-type Errors map[string]Error
+type ValidationErrors map[string]ValidationError

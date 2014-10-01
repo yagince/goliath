@@ -18,8 +18,8 @@ func TestValidation_EmptyMap(t *testing.T) {
 
 	var (
 		result ValidationResult
-		errors Errors
-		error  Error
+		errors ValidationErrors
+		error  ValidationError
 	)
 
 	result = validation.Validate(map[string]interface{}{})
@@ -41,8 +41,8 @@ func TestValidation_MinLength(t *testing.T) {
 
 	var (
 		result ValidationResult
-		errors Errors
-		error  Error
+		errors ValidationErrors
+		error  ValidationError
 	)
 
 	result = validation.Validate(map[string]interface{}{"name": "1"})
@@ -61,8 +61,8 @@ func TestValidation_MaxLength(t *testing.T) {
 
 	var (
 		result ValidationResult
-		errors Errors
-		error  Error
+		errors ValidationErrors
+		error  ValidationError
 	)
 
 	result = validation.Validate(map[string]interface{}{"name": "1234"})
@@ -82,7 +82,7 @@ func TestValidation_MultiValue(t *testing.T) {
 
 	var (
 		result ValidationResult
-		errors Errors
+		errors ValidationErrors
 	)
 
 	result = validation.Validate(map[string]interface{}{"name": "1234", "password": "12345"})
