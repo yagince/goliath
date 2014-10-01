@@ -51,19 +51,21 @@ func (field FieldValidator) IsSatisfied(value interface{}) (message string, ok b
 	return "", true
 }
 
-func (field *FieldValidator) Required() *FieldValidator {
-	field.validators = append(field.validators, Required{})
+func (field *FieldValidator) AddValidator(v Validator) *FieldValidator {
+	field.validators = append(field.validators, v)
 	return field
+}
+
+func (field *FieldValidator) Required() *FieldValidator {
+	return field.AddValidator(Required{})
 }
 
 func (field *FieldValidator) MinLength(length int) *FieldValidator {
-	field.validators = append(field.validators, MinLength{length})
-	return field
+	return field.AddValidator(MinLength{length})
 }
 
 func (field *FieldValidator) MaxLength(length int) *FieldValidator {
-	field.validators = append(field.validators, MaxLength{length})
-	return field
+	return field.AddValidator(MaxLength{length})
 }
 
 type ValidationResult struct {

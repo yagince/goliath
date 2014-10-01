@@ -100,3 +100,26 @@ func TestValidation_MultiValue(t *testing.T) {
 		Verify(t, Equal{error.Message, (MinLength{6}).Message()})
 	}
 }
+
+type CustomValidator struct{}
+
+func (v CustomValidator) IsSatisfied(value interface{}) bool {
+	_, ok := value.(string)
+	return ok
+}
+func (v CustomValidator) Message() string {
+	return "must be String"
+}
+
+func TestValidation_Custom(t *testing.T) {
+	validation := NewValidation()
+	validation.Field("name").AddValidator(CustomValidator{})
+
+	result := validation.Validate(map[string]interface{}{"name": 100})
+	Verify(t, IsTrue{result.HasError()})
+
+	errors := result.Errors()
+	error, ok := errors["name"]
+	Assert(t, IsTrue{ok})
+	Verify(t, Equal{error.Message, (CustomValidator{}).Message()})
+}
