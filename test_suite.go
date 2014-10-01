@@ -31,14 +31,14 @@ func printErrors(matcher Matcher) {
 func Assert(t *testing.T, matcher Matcher) {
 	if !matcher.IsSatisfied() {
 		printErrors(matcher)
-		t.Fail()
+		t.FailNow()
 	}
 }
 
 func Verify(t *testing.T, matcher Matcher) {
 	if !matcher.IsSatisfied() {
 		printErrors(matcher)
-		t.FailNow()
+		t.Fail()
 	}
 }
 
@@ -74,6 +74,23 @@ func (matcher IsTrue) Expected() string {
 	return strconv.FormatBool(true)
 }
 func (matcher IsTrue) Actual() string {
+	return strconv.FormatBool(matcher.actual)
+}
+
+type IsFalse struct {
+	actual bool
+}
+
+func (matcher IsFalse) IsSatisfied() bool {
+	return matcher.actual == false
+}
+func (matcher IsFalse) ErrorMessage() string {
+	return fmt.Sprintf("expected false but got true")
+}
+func (matcher IsFalse) Expected() string {
+	return strconv.FormatBool(false)
+}
+func (matcher IsFalse) Actual() string {
 	return strconv.FormatBool(matcher.actual)
 }
 
