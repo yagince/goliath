@@ -6,7 +6,7 @@ import (
 )
 
 func TestMaxInt_IsSatisfied_int(t *testing.T) {
-	var validator Validator = MaxInt{5}
+	var validator Validator = MaxInt{Threshold: 5}
 	Verify(t, IsTrue{validator.IsSatisfied(5)})
 	Verify(t, IsFalse{validator.IsSatisfied(6)})
 
@@ -18,7 +18,7 @@ func TestMaxInt_IsSatisfied_int(t *testing.T) {
 }
 
 func TestMaxInt_IsSatisfied_Other(t *testing.T) {
-	var validator Validator = MaxInt{5}
+	var validator Validator = MaxInt{Threshold: 5}
 	Verify(t, IsFalse{validator.IsSatisfied(5.0)})
 	Verify(t, IsFalse{validator.IsSatisfied(4.1)})
 
@@ -32,7 +32,7 @@ func TestMaxInt_IsSatisfied_Other(t *testing.T) {
 func TestMaxInt_Message(t *testing.T) {
 	test := func(threshold int) {
 		Verify(t, Equal{
-			(MaxInt{threshold}).Message(),
+			(MaxInt{Threshold: threshold}).Message(),
 			fmt.Sprintf("must %d or less", threshold),
 		})
 	}

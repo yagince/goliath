@@ -51,7 +51,7 @@ func TestValidation_MinLength(t *testing.T) {
 	errors = result.Errors()
 	error, ok := errors["name"]
 	Assert(t, IsTrue{ok})
-	Verify(t, Equal{error.Message, (MinLength{2}).Message()})
+	Verify(t, Equal{error.Message, (MinLength{Length: 2}).Message()})
 
 }
 
@@ -71,7 +71,7 @@ func TestValidation_MaxLength(t *testing.T) {
 	errors = result.Errors()
 	error, ok := errors["name"]
 	Assert(t, IsTrue{ok})
-	Verify(t, Equal{error.Message, (MaxLength{3}).Message()})
+	Verify(t, Equal{error.Message, (MaxLength{Length: 3}).Message()})
 
 }
 
@@ -92,12 +92,12 @@ func TestValidation_MultiValue(t *testing.T) {
 	{
 		error, ok := errors["name"]
 		Assert(t, IsTrue{ok})
-		Verify(t, Equal{error.Message, (MaxLength{3}).Message()})
+		Verify(t, Equal{error.Message, (MaxLength{Length: 3}).Message()})
 	}
 	{
 		error, ok := errors["password"]
 		Assert(t, IsTrue{ok})
-		Verify(t, Equal{error.Message, (MinLength{6}).Message()})
+		Verify(t, Equal{error.Message, (MinLength{Length: 6}).Message()})
 	}
 }
 
@@ -122,4 +122,30 @@ func TestValidation_Custom(t *testing.T) {
 	error, ok := errors["name"]
 	Assert(t, IsTrue{ok})
 	Verify(t, Equal{error.Message, (CustomValidator{}).Message()})
+}
+
+func TestValidation_CustomMessage(t *testing.T) {
+	validation := NewValidation()
+	validation.Field("name").Required("req").MinLength(2, "min").MaxLength(4, "max")
+
+	{
+		errors := validation.Validate(map[string]interface{}{}).Errors()
+		err, ok := errors["name"]
+		Assert(t, IsTrue{ok})
+		Verify(t, Equal{err.Message, "req"})
+	}
+
+	{
+		errors := validation.Validate(map[string]interface{}{"name": "a"}).Errors()
+		err, ok := errors["name"]
+		Assert(t, IsTrue{ok})
+		Verify(t, Equal{err.Message, "min"})
+	}
+
+	{
+		errors := validation.Validate(map[string]interface{}{"name": "aaaaa"}).Errors()
+		err, ok := errors["name"]
+		Assert(t, IsTrue{ok})
+		Verify(t, Equal{err.Message, "max"})
+	}
 }

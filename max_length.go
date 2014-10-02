@@ -7,7 +7,8 @@ import (
 
 // (length of value) <= Length
 type MaxLength struct {
-	Length int
+	Length  int
+	message string
 }
 
 func (validator MaxLength) IsSatisfied(value interface{}) bool {
@@ -28,5 +29,8 @@ func (validator MaxLength) IsSatisfied(value interface{}) bool {
 }
 
 func (validator MaxLength) Message() string {
-	return fmt.Sprintf("must have %d or less elements", validator.Length)
+	return ChoiceMessage(
+		validator.message,
+		fmt.Sprintf("must have %d or less elements", validator.Length),
+	)
 }

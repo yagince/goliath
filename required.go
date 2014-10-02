@@ -1,6 +1,8 @@
 package goliath
 
-type Required struct{}
+type Required struct {
+	message string
+}
 
 func (validator Required) IsSatisfied(value interface{}) bool {
 	if value == nil {
@@ -15,5 +17,5 @@ func (validator Required) IsSatisfied(value interface{}) bool {
 }
 
 func (validator Required) Message() string {
-	return "required"
+	return ChoiceMessage(validator.message, "required")
 }

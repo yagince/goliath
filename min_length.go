@@ -7,7 +7,8 @@ import (
 
 // (length of value) >= Length
 type MinLength struct {
-	Length int
+	Length  int
+	message string
 }
 
 func (validator MinLength) IsSatisfied(value interface{}) bool {
@@ -28,5 +29,8 @@ func (validator MinLength) IsSatisfied(value interface{}) bool {
 }
 
 func (validator MinLength) Message() string {
-	return fmt.Sprintf("must have %d or more elements", validator.Length)
+	return ChoiceMessage(
+		validator.message,
+		fmt.Sprintf("must have %d or more elements", validator.Length),
+	)
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func TestMinLength_IsSatisfied_String(t *testing.T) {
-	var validator Validator = MinLength{1}
+	var validator Validator = MinLength{Length: 1}
 
 	if validator.IsSatisfied("") {
 		t.Error("empty string is 0 length value")
@@ -22,7 +22,7 @@ func TestMinLength_IsSatisfied_String(t *testing.T) {
 }
 
 func TestMinLength_IsSatisfied_Slice(t *testing.T) {
-	var validator Validator = MinLength{1}
+	var validator Validator = MinLength{Length: 1}
 
 	if validator.IsSatisfied([]string{}) {
 		t.Error("empty slice is 0 length value")
@@ -30,7 +30,7 @@ func TestMinLength_IsSatisfied_Slice(t *testing.T) {
 }
 
 func TestMinLength_IsSatisfied_Map(t *testing.T) {
-	var validator Validator = MinLength{1}
+	var validator Validator = MinLength{Length: 1}
 	value := map[int]int{}
 
 	if validator.IsSatisfied(value) {
@@ -39,7 +39,7 @@ func TestMinLength_IsSatisfied_Map(t *testing.T) {
 }
 
 func TestMinLength_IsSatisfied_Others(t *testing.T) {
-	var validator Validator = MinLength{1}
+	var validator Validator = MinLength{Length: 1}
 
 	if !validator.IsSatisfied(nil) {
 		t.Error("nil is ignore")
@@ -63,7 +63,7 @@ func TestMinLength_IsSatisfied_Others(t *testing.T) {
 func TestMinLength_Message(t *testing.T) {
 	test := func(length int) {
 		message := fmt.Sprintf("must have %d or more elements", length)
-		if (MinLength{length}).Message() != message {
+		if (MinLength{Length: length}).Message() != message {
 			t.Errorf("message must be %s", message)
 		}
 	}

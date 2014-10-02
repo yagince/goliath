@@ -6,7 +6,7 @@ import (
 )
 
 func TestMaxLength_IsSatisfied_String(t *testing.T) {
-	var validator Validator = MaxLength{2}
+	var validator Validator = MaxLength{Length: 2}
 
 	if !validator.IsSatisfied("") {
 		t.Error("empty string is 0 length value")
@@ -21,8 +21,8 @@ func TestMaxLength_IsSatisfied_String(t *testing.T) {
 	}
 }
 
-func TestMaxLength_IsSatisfied_Slice(t *testing.T) {
-	var validator Validator = MaxLength{2}
+func TestMaLength_IsSatisfied_Slice(t *testing.T) {
+	var validator Validator = MaxLength{Length: 2}
 	value := []string{"a", "b", "c"}
 
 	if validator.IsSatisfied(value) {
@@ -31,7 +31,7 @@ func TestMaxLength_IsSatisfied_Slice(t *testing.T) {
 }
 
 func TestMaxLength_IsSatisfied_Map(t *testing.T) {
-	var validator Validator = MaxLength{2}
+	var validator Validator = MaxLength{Length: 2}
 	value := map[int]int{1: 1, 2: 2, 3: 3}
 
 	if validator.IsSatisfied(value) {
@@ -40,7 +40,7 @@ func TestMaxLength_IsSatisfied_Map(t *testing.T) {
 }
 
 func TestMaxLength_IsSatisfied_Others(t *testing.T) {
-	var validator Validator = MaxLength{1}
+	var validator Validator = MaxLength{Length: 1}
 
 	if !validator.IsSatisfied(nil) {
 		t.Error("nil is ignore")
@@ -64,7 +64,7 @@ func TestMaxLength_IsSatisfied_Others(t *testing.T) {
 func TestMaxLength_Message(t *testing.T) {
 	test := func(length int) {
 		message := fmt.Sprintf("must have %d or less elements", length)
-		if (MaxLength{length}).Message() != message {
+		if (MaxLength{Length: length}).Message() != message {
 			t.Errorf("message must be %s", message)
 		}
 	}

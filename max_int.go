@@ -7,6 +7,7 @@ import (
 // value <= Threshold
 type MaxInt struct {
 	Threshold int
+	message   string
 }
 
 func (validator MaxInt) IsSatisfied(value interface{}) bool {
@@ -27,5 +28,5 @@ func (validator MaxInt) IsSatisfied(value interface{}) bool {
 }
 
 func (validator MaxInt) Message() string {
-	return fmt.Sprintf("must %d or less", validator.Threshold)
+	return ChoiceMessage(validator.message, fmt.Sprintf("must %d or less", validator.Threshold))
 }
