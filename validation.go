@@ -3,7 +3,7 @@ package goliath
 import ()
 
 type Validation struct {
-	validators map[string]FieldValidation
+	fieldValidations map[string]FieldValidation
 }
 
 func NewValidation() *Validation {
@@ -11,10 +11,10 @@ func NewValidation() *Validation {
 }
 
 func (validation *Validation) Field(name string) FieldValidation {
-	fieldValidator, ok := validation.validators[name]
+	fieldValidator, ok := validation.fieldValidations[name]
 	if !ok {
 		fieldValidator = NewBasicFieldValidation(name)
-		validation.validators[name] = fieldValidator
+		validation.fieldValidations[name] = fieldValidator
 	}
 	return fieldValidator
 }
@@ -22,8 +22,8 @@ func (validation *Validation) Field(name string) FieldValidation {
 func (validation *Validation) Validate(values map[string]interface{}) ValidationResult {
 	result := ValidationResult{make(ValidationErrors)}
 
-	for name, validators := range validation.validators {
-		message, ok := validators.IsSatisfied(values[name])
+	for name, fieldValidation := range validation.fieldValidations {
+		message, ok := fieldValidation.IsSatisfied(values[name])
 		if !ok {
 			result.AddError(ValidationError{Key: name, Message: message})
 		}
