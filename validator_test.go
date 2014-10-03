@@ -1,6 +1,7 @@
 package goliath
 
 import (
+	. "./test_util"
 	"testing"
 )
 

@@ -1,6 +1,7 @@
 package goliath
 
 import (
+	. "./test_util"
 	"fmt"
 	"testing"
 )
@@ -8,35 +9,21 @@ import (
 func TestMaxLength_IsSatisfied_String(t *testing.T) {
 	var validator Validator = MaxLength{Length: 2}
 
-	if !validator.IsSatisfied("") {
-		t.Error("empty string is 0 length value")
-	}
-
-	if !validator.IsSatisfied("aa") {
-		t.Error("aa is 1 length")
-	}
-
-	if validator.IsSatisfied("aaa") {
-		t.Error("aaa is over 2 length")
-	}
+	Verify(t, IsTrue{validator.IsSatisfied("")})
+	Verify(t, IsTrue{validator.IsSatisfied("aa")})
+	Verify(t, IsFalse{validator.IsSatisfied("aaa")})
 }
 
 func TestMaLength_IsSatisfied_Slice(t *testing.T) {
 	var validator Validator = MaxLength{Length: 2}
-	value := []string{"a", "b", "c"}
 
-	if validator.IsSatisfied(value) {
-		t.Errorf("%v is over 2 length", value)
-	}
+	Verify(t, IsFalse{validator.IsSatisfied([]string{"a", "b", "c"})})
 }
 
 func TestMaxLength_IsSatisfied_Map(t *testing.T) {
 	var validator Validator = MaxLength{Length: 2}
-	value := map[int]int{1: 1, 2: 2, 3: 3}
 
-	if validator.IsSatisfied(value) {
-		t.Errorf("%v is over 2 length", value)
-	}
+	Verify(t, IsFalse{validator.IsSatisfied(map[int]int{1: 1, 2: 2, 3: 3})})
 }
 
 func TestMaxLength_IsSatisfied_Others(t *testing.T) {

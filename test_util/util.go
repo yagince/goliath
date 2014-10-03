@@ -1,4 +1,4 @@
-package goliath
+package test_util
 
 import (
 	"fmt"
@@ -43,29 +43,29 @@ func Verify(t *testing.T, matcher Matcher) {
 }
 
 type Equal struct {
-	expected interface{}
-	actual   interface{}
+	ExpectedValue interface{}
+	ActualValue   interface{}
 }
 
 func (matcher Equal) IsSatisfied() bool {
-	return reflect.DeepEqual(matcher.expected, matcher.actual)
+	return reflect.DeepEqual(matcher.ExpectedValue, matcher.ActualValue)
 }
 func (matcher Equal) ErrorMessage() string {
-	return fmt.Sprintf("`%v` is not `%v`", matcher.actual, matcher.expected)
+	return fmt.Sprintf("`%v` is not `%v`", matcher.ActualValue, matcher.ExpectedValue)
 }
 func (matcher Equal) Expected() string {
-	return fmt.Sprintf("%v", matcher.expected)
+	return fmt.Sprintf("%v", matcher.ExpectedValue)
 }
 func (matcher Equal) Actual() string {
-	return fmt.Sprintf("%v", matcher.actual)
+	return fmt.Sprintf("%v", matcher.ActualValue)
 }
 
 type IsTrue struct {
-	actual bool
+	ActualValue bool
 }
 
 func (matcher IsTrue) IsSatisfied() bool {
-	return matcher.actual == true
+	return matcher.ActualValue == true
 }
 func (matcher IsTrue) ErrorMessage() string {
 	return fmt.Sprintf("expected true but got false")
@@ -74,15 +74,15 @@ func (matcher IsTrue) Expected() string {
 	return strconv.FormatBool(true)
 }
 func (matcher IsTrue) Actual() string {
-	return strconv.FormatBool(matcher.actual)
+	return strconv.FormatBool(matcher.ActualValue)
 }
 
 type IsFalse struct {
-	actual bool
+	ActualValue bool
 }
 
 func (matcher IsFalse) IsSatisfied() bool {
-	return matcher.actual == false
+	return matcher.ActualValue == false
 }
 func (matcher IsFalse) ErrorMessage() string {
 	return fmt.Sprintf("expected false but got true")
@@ -91,7 +91,7 @@ func (matcher IsFalse) Expected() string {
 	return strconv.FormatBool(false)
 }
 func (matcher IsFalse) Actual() string {
-	return strconv.FormatBool(matcher.actual)
+	return strconv.FormatBool(matcher.ActualValue)
 }
 
 // Add red terminal ANSI color

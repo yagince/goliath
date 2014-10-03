@@ -1,6 +1,7 @@
 package goliath
 
 import (
+	. "./test_util"
 	"fmt"
 	"testing"
 )
@@ -8,34 +9,21 @@ import (
 func TestMinLength_IsSatisfied_String(t *testing.T) {
 	var validator Validator = MinLength{Length: 1}
 
-	if validator.IsSatisfied("") {
-		t.Error("empty string is 0 length value")
-	}
-
-	if !validator.IsSatisfied("a") {
-		t.Error("a is 1 length")
-	}
-
-	if !validator.IsSatisfied("aaa") {
-		t.Error("aaa is over 1 length")
-	}
+	Verify(t, IsFalse{validator.IsSatisfied("")})
+	Verify(t, IsTrue{validator.IsSatisfied("a")})
+	Verify(t, IsTrue{validator.IsSatisfied("aaa")})
 }
 
 func TestMinLength_IsSatisfied_Slice(t *testing.T) {
 	var validator Validator = MinLength{Length: 1}
 
-	if validator.IsSatisfied([]string{}) {
-		t.Error("empty slice is 0 length value")
-	}
+	Verify(t, IsFalse{validator.IsSatisfied([]string{})})
 }
 
 func TestMinLength_IsSatisfied_Map(t *testing.T) {
 	var validator Validator = MinLength{Length: 1}
-	value := map[int]int{}
 
-	if validator.IsSatisfied(value) {
-		t.Errorf("%v is 0 length", value)
-	}
+	Verify(t, IsFalse{validator.IsSatisfied(map[int]int{})})
 }
 
 func TestMinLength_IsSatisfied_Others(t *testing.T) {
