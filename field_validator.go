@@ -25,39 +25,37 @@ func (field *FieldValidator) AddValidator(v Validator) *FieldValidator {
 	return field
 }
 
-func extractMessage(m ...string) string {
+func extractMessage(m ...string) (message string, ok bool) {
 	if len(m) > 0 {
-		return m[0]
+		return m[0], true
 	}
-	return ""
+	return "", false
+}
+
+func wrapCustomMessageValidator(validator Validator, message ...string) Validator {
+	if m, ok := extractMessage(message...); ok {
+		return CustomMessageValidator{validator, m}
+	} else {
+		return validator
+	}
 }
 
 func (field *FieldValidator) Required(customMessage ...string) *FieldValidator {
-	validator := Required{}
-	validator.message = extractMessage(customMessage...)
-	return field.AddValidator(validator)
+	return field.AddValidator(wrapCustomMessageValidator(Required{}, customMessage...))
 }
 
 func (field *FieldValidator) MinLength(length int, customMessage ...string) *FieldValidator {
-	validator := MinLength{Length: length}
-	validator.message = extractMessage(customMessage...)
-	return field.AddValidator(validator)
+	return field.AddValidator(wrapCustomMessageValidator(MinLength{length}, customMessage...))
 }
 
 func (field *FieldValidator) MaxLength(length int, customMessage ...string) *FieldValidator {
-	validator := MaxLength{Length: length}
-	validator.message = extractMessage(customMessage...)
-	return field.AddValidator(validator)
+	return field.AddValidator(wrapCustomMessageValidator(MaxLength{length}, customMessage...))
 }
 
 func (field *FieldValidator) MinInt(threshold int, customMessage ...string) *FieldValidator {
-	validator := MinInt{Threshold: threshold}
-	validator.message = extractMessage(customMessage...)
-	return field.AddValidator(validator)
+	return field.AddValidator(wrapCustomMessageValidator(MinInt{threshold}, customMessage...))
 }
 
 func (field *FieldValidator) MaxInt(threshold int, customMessage ...string) *FieldValidator {
-	validator := MaxInt{Threshold: threshold}
-	validator.message = extractMessage(customMessage...)
-	return field.AddValidator(validator)
+	return field.AddValidator(wrapCustomMessageValidator(MaxInt{threshold}, customMessage...))
 }

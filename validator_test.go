@@ -4,7 +4,8 @@ import (
 	"testing"
 )
 
-func TestChoiceMessage(t *testing.T) {
-	m := ChoiceMessage("", "hoge", "foo")
-	Assert(t, Equal{m, "hoge"})
+func TestCustomMessageValidator(t *testing.T) {
+	c := CustomMessageValidator{Required{}, "custom message"}
+	Assert(t, Equal{c.Message(), "custom message"})
+	Assert(t, IsFalse{c.IsSatisfied("")})
 }

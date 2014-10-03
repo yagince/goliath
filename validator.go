@@ -5,12 +5,11 @@ type Validator interface {
 	Message() string
 }
 
-func ChoiceMessage(m ...string) string {
-	empty := ""
-	for _, val := range m {
-		if val != empty {
-			return val
-		}
-	}
-	return empty
+type CustomMessageValidator struct {
+	Validator
+	CustomMessage string
+}
+
+func (validator CustomMessageValidator) Message() string {
+	return validator.CustomMessage
 }
