@@ -3,17 +3,17 @@ package goliath
 import ()
 
 type Validation struct {
-	validators map[string]*FieldValidator
+	validators map[string]FieldValidation
 }
 
 func NewValidation() *Validation {
-	return &Validation{make(map[string]*FieldValidator)}
+	return &Validation{make(map[string]FieldValidation)}
 }
 
-func (validation *Validation) Field(name string) *FieldValidator {
+func (validation *Validation) Field(name string) FieldValidation {
 	fieldValidator, ok := validation.validators[name]
 	if !ok {
-		fieldValidator = NewFieldValidator(name)
+		fieldValidator = NewBasicFieldValidation(name)
 		validation.validators[name] = fieldValidator
 	}
 	return fieldValidator

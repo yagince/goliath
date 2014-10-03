@@ -150,3 +150,60 @@ func TestValidation_CustomMessage(t *testing.T) {
 		Verify(t, Equal{err.Message, "max"})
 	}
 }
+
+func TestValidation_Each(t *testing.T) {
+	validation := NewValidation()
+	validation.Field("items").Required().MinLength(1).Each().MaxInt(3)
+
+	{
+		params := map[string]interface{}{
+			"items": 100,
+		}
+
+		result := validation.Validate(params)
+		Verify(t, IsTrue{result.HasError()})
+
+		errors := result.Errors()
+		err, ok := errors["items"]
+		Assert(t, IsTrue{ok})
+		Verify(t, Equal{(MinLength{1}).Message(), err.Message})
+	}
+
+	{
+		params := map[string]interface{}{
+			"items": "1",
+		}
+
+		result := validation.Validate(params)
+		Verify(t, IsTrue{result.HasError()})
+
+		errors := result.Errors()
+		err, ok := errors["items"]
+		Assert(t, IsTrue{ok})
+		Verify(t, Equal{(ArrayOrSlice{}).Message(), err.Message})
+	}
+
+	{
+		params := map[string]interface{}{
+			"items": []int{1, 4},
+		}
+
+		result := validation.Validate(params)
+		Verify(t, IsTrue{result.HasError()})
+
+		errors := result.Errors()
+		err, ok := errors["items"]
+		Assert(t, IsTrue{ok})
+		Verify(t, Equal{(MaxInt{3}).Message(), err.Message})
+	}
+
+	{
+		params := map[string]interface{}{
+			"items": []interface{}{1, 1},
+		}
+
+		result := validation.Validate(params)
+		Verify(t, IsFalse{result.HasError()})
+
+	}
+}
