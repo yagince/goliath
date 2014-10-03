@@ -25,21 +25,6 @@ func (field *FieldValidator) AddValidator(v Validator) *FieldValidator {
 	return field
 }
 
-func extractMessage(m ...string) (message string, ok bool) {
-	if len(m) > 0 {
-		return m[0], true
-	}
-	return "", false
-}
-
-func wrapCustomMessageValidator(validator Validator, message ...string) Validator {
-	if m, ok := extractMessage(message...); ok {
-		return CustomMessageValidator{validator, m}
-	} else {
-		return validator
-	}
-}
-
 func (field *FieldValidator) Required(customMessage ...string) *FieldValidator {
 	return field.AddValidator(wrapCustomMessageValidator(Required{}, customMessage...))
 }
@@ -58,4 +43,19 @@ func (field *FieldValidator) MinInt(threshold int, customMessage ...string) *Fie
 
 func (field *FieldValidator) MaxInt(threshold int, customMessage ...string) *FieldValidator {
 	return field.AddValidator(wrapCustomMessageValidator(MaxInt{threshold}, customMessage...))
+}
+
+func extractMessage(m ...string) (message string, ok bool) {
+	if len(m) > 0 {
+		return m[0], true
+	}
+	return "", false
+}
+
+func wrapCustomMessageValidator(validator Validator, message ...string) Validator {
+	if m, ok := extractMessage(message...); ok {
+		return CustomMessageValidator{validator, m}
+	} else {
+		return validator
+	}
 }
