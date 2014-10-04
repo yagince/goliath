@@ -31,6 +31,34 @@ func (validation *Validation) Validate(values map[string]interface{}) Validation
 	return result
 }
 
+type asycValidtaionResult struct {
+	name    string
+	message string
+	ok      bool
+}
+
+func (validation *Validation) ValidateAsync(values map[string]interface{}) ValidationResult {
+	result := ValidationResult{make(ValidationErrors)}
+
+	validationCount := len(validation.fieldValidations)
+	c := make(chan asycValidtaionResult, validationCount)
+
+	for name, fieldValidation := range validation.fieldValidations {
+		go func(n string, fV FieldValidation, v interface{}) {
+			message, ok := fieldValidation.IsSatisfied(values[name])
+			c <- asycValidtaionResult{name, message, ok}
+		}(name, fieldValidation, values[name])
+	}
+
+	for i := 0; i < validationCount; i++ {
+		r := <-c
+		if !r.ok {
+			result.AddError(ValidationError{Key: r.name, Message: r.message})
+		}
+	}
+	return result
+}
+
 type ValidationResult struct {
 	errors ValidationErrors
 }

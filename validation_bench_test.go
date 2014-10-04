@@ -2,14 +2,27 @@ package goliath
 
 import (
 	"fmt"
+	"runtime"
 	"testing"
 )
 
-func BenchmarkValidation(b *testing.B) {
+func BenchmarkSyncValidation(b *testing.B) {
 	validation, data := data()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		validation.Validate(data)
+	}
+}
+
+func BenchmarkAsyncValidation(b *testing.B) {
+	defer runtime.GOMAXPROCS(1)
+	cpus := runtime.NumCPU()
+	runtime.GOMAXPROCS(cpus)
+
+	validation, data := data()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		validation.ValidateAsync(data)
 	}
 }
 
