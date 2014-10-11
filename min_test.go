@@ -6,10 +6,12 @@ import (
 	"testing"
 )
 
-func TestMinInt_IsSatisfied_int(t *testing.T) {
-	var validator Validator = MinInt{Threshold: 5}
+func TestMin_IsSatisfied_int(t *testing.T) {
+	var validator Validator = Min{Threshold: 5}
 	Verify(t, IsTrue{validator.IsSatisfied(5)})
+	Verify(t, IsTrue{validator.IsSatisfied(5.1)})
 	Verify(t, IsFalse{validator.IsSatisfied(4)})
+	Verify(t, IsFalse{validator.IsSatisfied(4.1)})
 
 	Verify(t, IsTrue{validator.IsSatisfied(int32(5))})
 	Verify(t, IsFalse{validator.IsSatisfied(int32(4))})
@@ -18,10 +20,8 @@ func TestMinInt_IsSatisfied_int(t *testing.T) {
 	Verify(t, IsFalse{validator.IsSatisfied(int64(4))})
 }
 
-func TestMinInt_IsSatisfied_Other(t *testing.T) {
-	var validator Validator = MinInt{Threshold: 5}
-	Verify(t, IsFalse{validator.IsSatisfied(5.0)})
-	Verify(t, IsFalse{validator.IsSatisfied(5.1)})
+func TestMin_IsSatisfied_Other(t *testing.T) {
+	var validator Validator = Min{Threshold: 5}
 
 	Verify(t, IsFalse{validator.IsSatisfied("")})
 	Verify(t, IsFalse{validator.IsSatisfied("12345")})
@@ -30,10 +30,10 @@ func TestMinInt_IsSatisfied_Other(t *testing.T) {
 	Verify(t, IsFalse{validator.IsSatisfied(map[int]int{1: 1})})
 }
 
-func TestMinInt_Message(t *testing.T) {
-	test := func(threshold int) {
+func TestMin_Message(t *testing.T) {
+	test := func(threshold float64) {
 		Verify(t, Equal{
-			(MinInt{Threshold: threshold}).Message(),
+			(Min{Threshold: threshold}).Message(),
 			fmt.Sprintf("must %d or more", threshold),
 		})
 	}
