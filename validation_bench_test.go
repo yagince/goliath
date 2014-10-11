@@ -14,7 +14,7 @@ func BenchmarkSyncValidation(b *testing.B) {
 	}
 }
 
-func BenchmarkAsyncValidation(b *testing.B) {
+func BenchmarkParallelValidation(b *testing.B) {
 	defer runtime.GOMAXPROCS(1)
 	cpus := runtime.NumCPU()
 	runtime.GOMAXPROCS(cpus)
@@ -22,7 +22,7 @@ func BenchmarkAsyncValidation(b *testing.B) {
 	validation, data := data()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		validation.ValidateAsync(data)
+		validation.ValidateParallel(data)
 	}
 }
 

@@ -37,7 +37,7 @@ type asycValidtaionResult struct {
 	ok      bool
 }
 
-func (validation *Validation) ValidateAsync(values map[string]interface{}) ValidationResult {
+func (validation *Validation) ValidateParallel(values map[string]interface{}) ValidationResult {
 	result := ValidationResult{make(ValidationErrors)}
 
 	validationCount := len(validation.fieldValidations)
