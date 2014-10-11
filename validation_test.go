@@ -153,7 +153,7 @@ func TestValidation_CustomMessage(t *testing.T) {
 
 func TestValidation_Each(t *testing.T) {
 	validation := NewValidation()
-	validation.Field("items").Required().MinLength(1).Each().MaxInt(3)
+	validation.Field("items").Required().MinLength(1).Each().Max(3)
 
 	{
 		params := map[string]interface{}{
@@ -194,7 +194,7 @@ func TestValidation_Each(t *testing.T) {
 		errors := result.Errors()
 		err, ok := errors["items"]
 		Assert(t, IsTrue{ok})
-		Verify(t, Equal{(MaxInt{3}).Message(), err.Message})
+		Verify(t, Equal{(Max{3}).Message(), err.Message})
 	}
 
 	{

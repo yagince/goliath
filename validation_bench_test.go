@@ -36,7 +36,7 @@ func data() (*Validation, map[string]interface{}) {
 	}
 	for i := 0; i < n; i++ {
 		name := fmt.Sprintf("test%d", i)
-		validation.Field(name).Required().MaxLength(n).Each().MaxInt(n)
+		validation.Field(name).Required().MaxLength(n).Each().Max(float64(n))
 		data[name] = s
 	}
 	return validation, data

@@ -11,7 +11,7 @@ type FieldValidation interface {
 	MinLength(length int, customMessage ...string) FieldValidation
 	MaxLength(length int, customMessage ...string) FieldValidation
 	MinInt(threshold int, customMessage ...string) FieldValidation
-	MaxInt(threshold int, customMessage ...string) FieldValidation
+	Max(threshold float64, customMessage ...string) FieldValidation
 	Each() FieldValidation
 }
 
@@ -73,8 +73,8 @@ func (field *BasicFieldValidation) MinInt(threshold int, customMessage ...string
 	return field.AddValidator(wrapCustomMessageValidator(MinInt{threshold}, customMessage...))
 }
 
-func (field *BasicFieldValidation) MaxInt(threshold int, customMessage ...string) FieldValidation {
-	return field.AddValidator(wrapCustomMessageValidator(MaxInt{threshold}, customMessage...))
+func (field *BasicFieldValidation) Max(threshold float64, customMessage ...string) FieldValidation {
+	return field.AddValidator(wrapCustomMessageValidator(Max{threshold}, customMessage...))
 }
 
 func (field *BasicFieldValidation) Each() FieldValidation {
