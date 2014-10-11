@@ -76,6 +76,18 @@ func TestValidation_MaxLength(t *testing.T) {
 
 }
 
+func TestValidation_Pattern(t *testing.T) {
+	validation := NewValidation()
+	validation.Field("name").Pattern("^\\w$")
+
+	result := validation.Validate(map[string]interface{}{"name": "aaa hoge"})
+	Verify(t, IsTrue{result.HasError()})
+
+	errors := result.Errors()
+	_, ok := errors["name"]
+	Assert(t, IsTrue{ok})
+}
+
 func TestValidation_MultiValue(t *testing.T) {
 	validation := NewValidation()
 	validation.Field("name").Required().MinLength(2).MaxLength(3)

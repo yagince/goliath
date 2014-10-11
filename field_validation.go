@@ -2,6 +2,7 @@ package goliath
 
 import (
 	. "reflect"
+	"regexp"
 )
 
 type FieldValidation interface {
@@ -12,6 +13,7 @@ type FieldValidation interface {
 	MaxLength(length int, customMessage ...string) FieldValidation
 	Min(threshold float64, customMessage ...string) FieldValidation
 	Max(threshold float64, customMessage ...string) FieldValidation
+	Pattern(pattern string, customMessage ...string) FieldValidation
 	Each() FieldValidation
 }
 
@@ -75,6 +77,10 @@ func (field *BasicFieldValidation) Min(threshold float64, customMessage ...strin
 
 func (field *BasicFieldValidation) Max(threshold float64, customMessage ...string) FieldValidation {
 	return field.AddValidator(wrapCustomMessageValidator(Max{threshold}, customMessage...))
+}
+
+func (field *BasicFieldValidation) Pattern(pattern string, customMessage ...string) FieldValidation {
+	return field.AddValidator(wrapCustomMessageValidator(Pattern{regexp.MustCompile(pattern)}, customMessage...))
 }
 
 func (field *BasicFieldValidation) Each() FieldValidation {
