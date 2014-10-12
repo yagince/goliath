@@ -15,6 +15,7 @@ type FieldValidation interface {
 	Max(threshold float64, customMessage ...string) FieldValidation
 	Pattern(pattern string, customMessage ...string) FieldValidation
 	Each() FieldValidation
+	Object(validation Validation) *Validation
 }
 
 type BasicFieldValidation struct {
@@ -89,6 +90,12 @@ func (field *BasicFieldValidation) Each() FieldValidation {
 	return nested
 }
 
+func (field *BasicFieldValidation) Object(validation Validation) *Validation {
+	nested := &ObjectFieldValidation{NewBasicFieldValidation(field.Name), &validation}
+	field.next = nested
+	return &validation
+}
+
 func extractMessage(m ...string) (message string, ok bool) {
 	if len(m) > 0 {
 		return m[0], true
@@ -119,6 +126,29 @@ func (field ArrayFieldValidation) IsSatisfied(value interface{}) (message string
 		if message, ok = field.execValidators(v.Index(i).Interface()); !ok {
 			return
 		}
+	}
+
+	if field.next != nil {
+		return field.next.IsSatisfied(value)
+	}
+
+	return "", true
+}
+
+type ObjectFieldValidation struct {
+	*BasicFieldValidation
+	nestedValidation *Validation
+}
+
+func (field ObjectFieldValidation) IsSatisfied(value interface{}) (message string, ok bool) {
+	jsonObjectValidator = JsonObject{}
+	if !jsonObjectValidator.IsSatisfied(value) {
+		return jsonObjectValidator.Message(), false
+	}
+
+	field.nestedValidation.Validate(jsonObjectValidator.cast(value))
+	if field.nestedValidation.HasError() {
+		field.nestedValidation.Errors()
 	}
 
 	if field.next != nil {

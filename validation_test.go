@@ -219,3 +219,26 @@ func TestValidation_Each(t *testing.T) {
 
 	}
 }
+
+func TestValidation_Object(t *testing.T) {
+	itemValidation := NewValidation()
+	itemValidation.Field("name").Required().MinLength(1).MaxLength(100)
+	itemValidation.Field("amount").Required().Min(1).Max(10)
+
+	validation := NewValidation()
+	validation.Field("items").Required().Object(*itemValidation)
+
+	{
+		params := map[string]interface{}{
+			"items": 100,
+		}
+
+		result := validation.Validate(params)
+		Verify(t, IsTrue{result.HasError()})
+
+		errors := result.Errors()
+		_, ok := errors["items"]
+		Assert(t, IsTrue{ok})
+		t.Log(errors)
+	}
+}
