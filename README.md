@@ -16,8 +16,8 @@ validation.Field("name").Required().MinLength(2).MaxLength(3)
 
 var (
 	result ValidationResult
-	errors Errors
-	error  Error
+	errors ValidtaionErrors
+	error  ValidtaionError
 )
 
 result = validation.Validate(map[string]interface{}{})
