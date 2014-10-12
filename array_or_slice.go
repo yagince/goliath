@@ -1,7 +1,6 @@
 package goliath
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -21,5 +20,5 @@ func (validator ArrayOrSlice) IsSatisfied(value interface{}) bool {
 }
 
 func (validator ArrayOrSlice) Message() string {
-	return fmt.Sprintf("must be array")
+	return "must be array"
 }
